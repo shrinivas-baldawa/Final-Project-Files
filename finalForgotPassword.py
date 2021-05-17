@@ -92,7 +92,6 @@ class Ui_ForgotPass(object):
             headers = {'cache-control':'no-cache'}
             response = requests.request("GET",url,headers=headers, params=query_string)
             
-    
     def opt_check_(self):
         if self.otp == int(self.otpenter_field.text()):
             self.otpsent_label.setText('OTP Verified!')

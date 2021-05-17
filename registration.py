@@ -95,7 +95,7 @@ class Ui_registration(object):
                             msg.setText("Registration Is Successful")
                             msg.setWindowTitle("Success")
                             msg.setStandardButtons(QMessageBox.Ok)
-                            retVal = msg.exec_()
+                            msg.exec_()
                             cur.close()
                             conn.close()
                         else:
@@ -104,7 +104,7 @@ class Ui_registration(object):
                             msg.setText("Already Registered")
                             msg.setWindowTitle("Error")
                             msg.setStandardButtons(QMessageBox.Ok)
-                            retVal = msg.exec_()
+                            msg.exec_()
 
                     else:
                         msg = QMessageBox()
@@ -135,7 +135,6 @@ class Ui_registration(object):
         self.phoneno_label_2.setText(_translate("registration", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:600;\">Password</span></p></body></html>"))
         self.phoneno_label_3.setText(_translate("registration", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:600;\">Confirm Password</span></p></body></html>"))
         self.pushButton.setText(_translate("registration", "Register !"))
-
 
 if __name__ == "__main__":
     import sys

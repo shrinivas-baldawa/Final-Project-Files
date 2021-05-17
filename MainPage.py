@@ -170,14 +170,14 @@ class Ui_MainPage(object):
 
             self.allRollNumbers = self.df['PRN']
             msg = QMessageBox()
-            msg.setIcon(QMessageBox.information)
+            msg.setIcon(QMessageBox.Information)
             msg.setText("File Is Read Successfully")
             msg.setWindowTitle("Success")
             msg.exec_()
 
         except Exception as e:
             msg = QMessageBox()
-            msg.setIcon(QMessageBox.warning)
+            msg.setIcon(QMessageBox.Warning)
             msg.setText('Error {}'.format(e))
             msg.setWindowTitle("Error")
             msg.exec_()
@@ -284,14 +284,14 @@ class Ui_MainPage(object):
                 server3.login('facultysies.email@gmail.com','facultyemail')
                 server3.send_message(self.msg3)
             msg = QMessageBox()
-            msg.setIcon(QMessageBox.information)
+            msg.setIcon(QMessageBox.Information)
             msg.setText("Mail Sent To Students")
             msg.setWindowTitle("Success")
             msg.exec_()
 
         except Exception as e:
             msg = QMessageBox()
-            msg.setIcon(QMessageBox.warning)
+            msg.setIcon(QMessageBox.Warning)
             msg.setText('Error Occured {}'.format(e))
             msg.setWindowTitle("Success")
             msg.exec_()
