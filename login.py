@@ -1,7 +1,7 @@
 import psycopg2
 from PyQt5.QtWidgets import QMessageBox
 from registration import Ui_registration
-from FinalMailSend import Ui_MainPage
+from MainPage import Ui_MainPage
 from finalForgotPassword import Ui_ForgotPass
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -43,9 +43,6 @@ class Ui_LoginWindow(object):
         self.retranslateUi(LoginWindow)
         QtCore.QMetaObject.connectSlotsByName(LoginWindow)
 
-    def email_id_ret_(self):
-        return self.username_field.text()
-
     def login_check(self):
         conn = psycopg2.connect(
                 host='ec2-18-206-20-102.compute-1.amazonaws.com',
@@ -83,7 +80,10 @@ class Ui_LoginWindow(object):
                     self.ui.setupUi(self.window)
                     self.window.show()
             except Exception as e:
-                print(f"Error due to {str(e)}")
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                msg.setText(f"Error due to {str(e)}")
+                msg.setWindowTitle("Error")
             finally:
                 cur.close()
                 conn.close()

@@ -1,23 +1,27 @@
 from tkinter import filedialog
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMessageBox
 import psycopg2
 import pandas as pd
 from tkinter import *
 from tkinter.filedialog import *
 import smtplib
 from email.message import EmailMessage
+from PyQt5.QtWidgets import QMessageBox
 import sys
+from Student_Details import Ui_Student_details
 
 
 class Ui_MainPage(object):
     def setupUi(self, MainPage):
+        self.attachments = []
         MainPage.setObjectName("MainPage")
-        MainPage.resize(564, 655)
+        MainPage.resize(564, 741)
         font = QtGui.QFont()
-        font.setFamily("Arial Black")
+        font.setFamily("Arial")
         font.setPointSize(12)
-        font.setBold(False)
+        font.setBold(True)
         font.setWeight(75)
         MainPage.setFont(font)
         MainPage.setMouseTracking(True)
@@ -130,13 +134,20 @@ class Ui_MainPage(object):
         self.menuOptions = QtWidgets.QMenu(self.menuBar)
         self.menuOptions.setObjectName("menuOptions")
         MainPage.setMenuBar(self.menuBar)
-        self.actionUpload_Student_Data = QtWidgets.QAction(MainPage)
-        self.actionUpload_Student_Data.setObjectName("actionUpload_Student_Data")
-        self.menuOptions.addAction(self.actionUpload_Student_Data)
+        self.Upload_Student_Data = QtWidgets.QAction(MainPage)
+        self.Upload_Student_Data.setObjectName("Upload_Student_Data")
+        self.Upload_Student_Data.triggered.connect(self.Upload_Student_Data_check)
+        self.menuOptions.addAction(self.Upload_Student_Data)
         self.menuBar.addAction(self.menuOptions.menuAction())
 
         self.retranslateUi(MainPage)
         QtCore.QMetaObject.connectSlotsByName(MainPage)
+
+    def Upload_Student_Data_check(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_Student_details()
+        self.ui.setupUi(self.window)
+        self.window.show()
 
     def attachments_check_(self):
         self.filename = filedialog.askopenfilename(initialdir='/',title='Please Select A File')
@@ -153,26 +164,30 @@ class Ui_MainPage(object):
 
             self.present_dataframe = self.df[self.df['Status'] == 'P']
             self.presentIDS = self.present_dataframe.iloc[:,1]
-            # print('Present Students Email Ids: {}'.format(self.presentIDS.values.tolist()))
 
             self.absent_dataframe = self.df[self.df['Status'] == 'A']
             self.absentIDS = self.absent_dataframe.iloc[:,1]
-            # print('Absent Students Email Ids: {}'.format(self.absentIDS.values.tolist()))
 
             self.allRollNumbers = self.df['PRN']
-            # print(self.allRollNumbers.values.tolist())
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.information)
+            msg.setText("File Is Read Successfully")
+            msg.setWindowTitle("Success")
+            msg.exec_()
 
         except Exception as e:
-            print('Error {}'.format(e))
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.warning)
+            msg.setText('Error {}'.format(e))
+            msg.setWindowTitle("Error")
+            msg.exec_()
 
     def mailSend(self):
         try:
-            # Connecting to database
             conn = psycopg2.connect(host='ec2-18-206-20-102.compute-1.amazonaws.com',
             user='gnmwvfusjgondu',
             password='d24dd511d794c7214bec9c67be92740279caabac4cb8e08f4769f49de27b580e',
             dbname='ddeuc850qat336')
-            # Making a cursor for executing the query's
             cur = conn.cursor()
 
             allBranches = ['CE','IT','EXTC','PPT','MECH']
@@ -187,9 +202,7 @@ class Ui_MainPage(object):
             finalQuery = "select email from ids where branch = '{}' and year in {} except select email from ids where prn in {}".format(allBranches[branchPosition[0]],tuple(branches),tuple(self.allRollNumbers))
             cur.execute(finalQuery)
             rows2 = cur.fetchall()
-            print(rows2) # This is a list type
 
-            # Here we will be sending mail to the emails in excel sheet
             self.msg1 = EmailMessage()
             self.msg1['Subject'] = 'SIES Graduate School Of Technology'
             self.msg1['From'] = 'Faculty'
@@ -243,8 +256,6 @@ class Ui_MainPage(object):
             SIES GST,
             Nerul, Navi Mumbai.'''.format(self.eventUpdate_text.toPlainText(), self.announcement_text.toPlainText()))
 
-            print('Mail Sent')
-            # Attachments - reading and attaching
             for self.filename in self.attachments:
                 self.filetype = self.filename.split('.')
                 self.filetype = self.filetype[1]
@@ -272,9 +283,18 @@ class Ui_MainPage(object):
             with smtplib.SMTP_SSL('smtp.gmail.com',465) as server3:
                 server3.login('facultysies.email@gmail.com','facultyemail')
                 server3.send_message(self.msg3)
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.information)
+            msg.setText("Mail Sent To Students")
+            msg.setWindowTitle("Success")
+            msg.exec_()
 
         except Exception as e:
-            print('Error Occured {}'.format(e))
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.warning)
+            msg.setText('Error Occured {}'.format(e))
+            msg.setWindowTitle("Success")
+            msg.exec_()
         finally:
             cur.close()
             conn.close()
@@ -350,11 +370,15 @@ class Ui_MainPage(object):
             self.te_checkbox.setEnabled(False)
             self.be_checkbox.setEnabled(False)
 
+
+        self.label_5.setText('Data Uploaded')
+
     def retranslateUi(self, MainPage):
         _translate = QtCore.QCoreApplication.translate
         self.attendance_btn.setText(_translate("MainPage", "Select Your Files "))
         self.eventUpdate_text.setHtml(_translate("MainPage", ""))
-        self.label.setText(_translate("MainPage", "Attendance "))
+        self.label.setText(_translate("MainPage", "Attendance"))
+        self.label_5.setText(_translate("MainPage", ""))
         self.label_2.setText(_translate("MainPage", "Event Updates"))
         self.eventUpdates_btn.setText(_translate("MainPage", "Browse for Attatchments"))
         self.label_3.setText(_translate("MainPage", "Announcements"))
@@ -371,6 +395,8 @@ class Ui_MainPage(object):
         self.ppt_checkbox.setText(_translate("MainPage", "PPT"))
         self.extc_checkbox.setText(_translate("MainPage", "EXTC"))
         self.mech_checkbox.setText(_translate("MainPage", "MECH"))
+        self.menuOptions.setTitle(_translate("MainPage", "Options"))
+        self.Upload_Student_Data.setText(_translate("MainPage", "Upload Student Data"))
 
 
 if __name__ == "__main__":
