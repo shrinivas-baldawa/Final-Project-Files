@@ -1,7 +1,7 @@
 import psycopg2
 from PyQt5.QtWidgets import QMessageBox
 from registration import Ui_registration
-from MainPage import Ui_MainPage
+from FinalMailSend import Ui_MainPage
 from finalForgotPassword import Ui_ForgotPass
 from PyQt5 import QtCore, QtGui, QtWidgets
 

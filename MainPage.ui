@@ -357,6 +357,28 @@ p, li { white-space: pre-wrap; }
     </property>
    </widget>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>564</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="actionUpload_Student_Data"/>
+   </widget>
+   <addaction name="menuOptions"/>
+  </widget>
+  <action name="actionUpload_Student_Data">
+   <property name="text">
+    <string>Upload Student Data</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

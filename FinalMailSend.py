@@ -9,6 +9,7 @@ import smtplib
 from email.message import EmailMessage
 import sys
 
+
 class Ui_MainPage(object):
     def setupUi(self, MainPage):
         MainPage.setObjectName("MainPage")
@@ -123,6 +124,16 @@ class Ui_MainPage(object):
         self.label_5.setText("")
         self.label_5.setObjectName("label_5")
         MainPage.setCentralWidget(self.centralwidget)
+        self.menuBar = QtWidgets.QMenuBar(MainPage)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 564, 26))
+        self.menuBar.setObjectName("menuBar")
+        self.menuOptions = QtWidgets.QMenu(self.menuBar)
+        self.menuOptions.setObjectName("menuOptions")
+        MainPage.setMenuBar(self.menuBar)
+        self.actionUpload_Student_Data = QtWidgets.QAction(MainPage)
+        self.actionUpload_Student_Data.setObjectName("actionUpload_Student_Data")
+        self.menuOptions.addAction(self.actionUpload_Student_Data)
+        self.menuBar.addAction(self.menuOptions.menuAction())
 
         self.retranslateUi(MainPage)
         QtCore.QMetaObject.connectSlotsByName(MainPage)
@@ -360,6 +371,7 @@ class Ui_MainPage(object):
         self.ppt_checkbox.setText(_translate("MainPage", "PPT"))
         self.extc_checkbox.setText(_translate("MainPage", "EXTC"))
         self.mech_checkbox.setText(_translate("MainPage", "MECH"))
+
 
 if __name__ == "__main__":
     import sys
