@@ -58,7 +58,7 @@ class Ui_LoginWindow(object):
             msg.setWindowTitle("Error")
             msg.exec_()
 
-        elif self.username_field.text() == "adminemail@gmail.com" and self.password_field.text() == "Adminhere":
+        elif self.username_field.text() == "adminemail@gmail.com" and self.password_field.text() == "admin":
             self.window = QtWidgets.QMainWindow()
             self.ui = Ui_registration()
             self.ui.setupUi(self.window)

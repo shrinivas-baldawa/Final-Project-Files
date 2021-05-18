@@ -37,6 +37,7 @@ class Ui_ForgotPass(object):
         self.newpassword_field.setGeometry(QtCore.QRect(80, 560, 451, 41))
         self.newpassword_field.setReadOnly(True)
         self.newpassword_field.setObjectName("newpassword_field")
+        self.newpassword_field.setEchoMode(QtWidgets.QLineEdit.Password)
         self.sendotp_btn = QtWidgets.QPushButton(self.centralwidget, clicked = lambda:self.opt_send_())
         self.sendotp_btn.setGeometry(QtCore.QRect(180, 220, 221, 51))
         font = QtGui.QFont()
@@ -61,36 +62,46 @@ class Ui_ForgotPass(object):
         QtCore.QMetaObject.connectSlotsByName(ForgotPass)
 
     def opt_send_(self):
-        conn = psycopg2.connect(
+        try:
+            conn = psycopg2.connect(
                 host='ec2-18-206-20-102.compute-1.amazonaws.com',
                 database='ddeuc850qat336',
                 user='gnmwvfusjgondu',
                 password='d24dd511d794c7214bec9c67be92740279caabac4cb8e08f4769f49de27b580e',
                 port='5432')
-        cur = conn.cursor()
-        varPhoneCheck = str(self.mobile_field.text())
-        cur.execute("SELECT * FROM logindetails WHERE mobileno = '{}'".format(varPhoneCheck))
-        row = cur.fetchone()
-        if row == None:
+            cur = conn.cursor()
+            varPhoneCheck = str(self.mobile_field.text())
+            cur.execute("SELECT * FROM logindetails WHERE mobileno = '{}'".format(varPhoneCheck))
+            row = cur.fetchone()
+            if row == None:
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                msg.setText("Mobile Number Is Not Registered")
+                msg.setWindowTitle("Error")
+                msg.exec_()
+                self.mobile_field.setText("")
+            else:
+                self.otpsent_label.setText("OTP Sent To Your Number")
+                self.otpenter_field.setReadOnly(False)
+                self.otp = random.randint(1000,9999)
+                url = 'https://www.fast2sms.com/dev/bulk'
+                query_string = {"authorization":"azscTIE0NFdCx5F5w9CU6DuYFTAyLcLafhUR24oZabvK2tbe2Qtf5Swgtl5P",
+                "sender_id":"SIES GST",
+                "message":"Your OTP Is : {0}".format(self.otp),
+                "language":"English",
+                "route":"p",
+                "numbers":"{0}".format(varPhoneCheck)}
+                headers = {'cache-control':'no-cache'}
+                response = requests.request("GET",url,headers=headers, params=query_string)
+        except Exception as e:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
-            msg.setText("Mobile Number Is Not Registered")
+            msg.setText(f"Error Occured: {str(e)}")
             msg.setWindowTitle("Error")
             msg.exec_()
-            self.mobile_field.setText("")
-        else:
-            self.otpsent_label.setText("OTP Sent To Your Number")
-            self.otpenter_field.setReadOnly(False)
-            self.otp = random.randint(1000,9999)
-            url = 'https://www.fast2sms.com/dev/bulk'
-            query_string = {"authorization":"nT87GLktWdXFyHqC5sKmN0jJlO4VzofQpEPS1biMBur6hwvUDg9OpbyVWUA8STarqKjeNGoQfLtxlg5s",
-            "sender_id":"SIES GST",
-            "message":"Your OTP Is : {0}".format(self.otp),
-            "language":"English",
-            "route":"p",
-            "numbers":"{0}".format(varPhoneCheck)}
-            headers = {'cache-control':'no-cache'}
-            response = requests.request("GET",url,headers=headers, params=query_string)
+        finally:
+            cur.close()
+            conn.close()
             
     def opt_check_(self):
         if self.otp == int(self.otpenter_field.text()):
@@ -114,6 +125,7 @@ class Ui_ForgotPass(object):
         msg.setIcon(QMessageBox.Information)
         msg.setText("Password Is Updated Successfully")
         msg.setWindowTitle("Success")
+        msg.exec_()
         cur.close()
         conn.close()
 

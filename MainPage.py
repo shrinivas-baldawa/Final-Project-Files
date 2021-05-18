@@ -12,7 +12,6 @@ from PyQt5.QtWidgets import QMessageBox
 import sys
 from Student_Details import Ui_Student_details
 
-
 class Ui_MainPage(object):
     def setupUi(self, MainPage):
         self.attachments = []
@@ -178,7 +177,7 @@ class Ui_MainPage(object):
         except Exception as e:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
-            msg.setText('Error {}'.format(e))
+            msg.setText('Error While Excel Reading {}'.format(e))
             msg.setWindowTitle("Error")
             msg.exec_()
 
@@ -201,7 +200,9 @@ class Ui_MainPage(object):
                 branches.append(allYears[k])
             finalQuery = "select email from ids where branch = '{}' and year in {} except select email from ids where prn in {}".format(allBranches[branchPosition[0]],tuple(branches),tuple(self.allRollNumbers))
             cur.execute(finalQuery)
-            rows2 = cur.fetchall()
+            rows2 = cur.fetchall() # This is a list type
+            self.finalList = []
+            self.finalList = [i[0] for i in rows2]
 
             self.msg1 = EmailMessage()
             self.msg1['Subject'] = 'SIES Graduate School Of Technology'
@@ -245,9 +246,9 @@ class Ui_MainPage(object):
             self.msg3['From'] = 'Faculty'
             self.msg3['X-Priority'] = '1'
             self.msg3['X-MSMail-Priority'] = 'High'
-            self.msg3['To'] = rows2
+            self.msg3['To'] = self.finalList
             self.msg3.set_content('''Hello Student,
-            
+
             {}
             
             {}
@@ -288,12 +289,11 @@ class Ui_MainPage(object):
             msg.setText("Mail Sent To Students")
             msg.setWindowTitle("Success")
             msg.exec_()
-
         except Exception as e:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
-            msg.setText('Error Occured {}'.format(e))
-            msg.setWindowTitle("Success")
+            msg.setText('Error Occured While Mail Sending {}'.format(str(e)))
+            msg.setWindowTitle("Warning")
             msg.exec_()
         finally:
             cur.close()
@@ -370,9 +370,6 @@ class Ui_MainPage(object):
             self.te_checkbox.setEnabled(False)
             self.be_checkbox.setEnabled(False)
 
-
-        self.label_5.setText('Data Uploaded')
-
     def retranslateUi(self, MainPage):
         _translate = QtCore.QCoreApplication.translate
         self.attendance_btn.setText(_translate("MainPage", "Select Your Files "))
@@ -397,7 +394,6 @@ class Ui_MainPage(object):
         self.mech_checkbox.setText(_translate("MainPage", "MECH"))
         self.menuOptions.setTitle(_translate("MainPage", "Options"))
         self.Upload_Student_Data.setText(_translate("MainPage", "Upload Student Data"))
-
 
 if __name__ == "__main__":
     import sys
