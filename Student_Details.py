@@ -79,7 +79,7 @@ class Ui_Student_details(object):
 
     def retranslateUi(self, Student_details):
         _translate = QtCore.QCoreApplication.translate
-        Student_details.setWindowTitle(_translate("Student_details", "MainWindow"))
+        Student_details.setWindowTitle(_translate("Student_details", "Upload Student Details"))
         self.label.setText(_translate("Student_details", "UPLOAD STUDENT DETAILS"))
         self.btn_browse.setText(_translate("Student_details", "Browse for file"))
         self.btn_close.setText(_translate("Student_details", "Close"))

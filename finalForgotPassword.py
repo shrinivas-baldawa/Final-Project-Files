@@ -131,7 +131,7 @@ class Ui_ForgotPass(object):
 
     def retranslateUi(self, ForgotPass):
         _translate = QtCore.QCoreApplication.translate
-        ForgotPass.setWindowTitle(_translate("ForgotPass", "MainWindow"))
+        ForgotPass.setWindowTitle(_translate("ForgotPass", "Forgot Password"))
         self.label.setText(_translate("ForgotPass", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt; font-weight:600;\">Forgot Your Password ?</span></p></body></html>"))
         self.enter_label.setText(_translate("ForgotPass", "<html><head/><body><p><span style=\" font-size:16pt;\">Enter Your </span></p><p><span style=\" font-size:16pt;\">Mobile Number</span></p></body></html>"))
         self.enterotp_label.setText(_translate("ForgotPass", "<html><head/><body><p><span style=\" font-size:16pt;\">Enter OTP</span></p></body></html>"))
@@ -140,7 +140,6 @@ class Ui_ForgotPass(object):
         self.sendotp_btn.setText(_translate("ForgotPass", "Send OTP"))
         self.checkotp_btn.setText(_translate("ForgotPass", "Check OTP !"))
         self.change_password_btn.setText(_translate("ForgotPass", "Change Password !"))
-
 
 if __name__ == "__main__":
     import sys

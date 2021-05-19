@@ -372,6 +372,7 @@ class Ui_MainPage(object):
 
     def retranslateUi(self, MainPage):
         _translate = QtCore.QCoreApplication.translate
+        MainPage.setWindowTitle(_translate("MainPage", "Mail Sending"))
         self.attendance_btn.setText(_translate("MainPage", "Select Your Files "))
         self.eventUpdate_text.setHtml(_translate("MainPage", ""))
         self.label.setText(_translate("MainPage", "Attendance"))
