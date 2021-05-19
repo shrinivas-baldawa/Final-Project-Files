@@ -81,7 +81,11 @@ class Ui_ForgotPass(object):
                 msg.exec_()
                 self.mobile_field.setText("")
             else:
-                self.otpsent_label.setText("OTP Sent To Your Number")
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Information)
+                msg.setText(f"OTP Sent To Your Registered Mobile Number")
+                msg.setWindowTitle("Information")
+                msg.exec_()
                 self.otpenter_field.setReadOnly(False)
                 self.otp = random.randint(1000,9999)
                 url = 'https://www.fast2sms.com/dev/bulk'
@@ -105,29 +109,43 @@ class Ui_ForgotPass(object):
             
     def opt_check_(self):
         if self.otp == int(self.otpenter_field.text()):
-            self.otpsent_label.setText('OTP Verified!')
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setText(f"OTP Verified, You Can Change Your Password Now!")
+            msg.setWindowTitle("Information")
+            msg.exec_()
             self.newpassword_field.setReadOnly(False)
         else:
             self.otpsent_label.setText('Invalid OTP!')
 
     def password_update_(self):
-        conn = psycopg2.connect(
+        try:
+            conn = psycopg2.connect(
                 host='ec2-18-206-20-102.compute-1.amazonaws.com',
                 database='ddeuc850qat336',
                 user='gnmwvfusjgondu',
                 password='d24dd511d794c7214bec9c67be92740279caabac4cb8e08f4769f49de27b580e',
                 port='5432')
-        cur = conn.cursor()
-        varNewPass = self.newpassword_field.text()
-        cur.execute("UPDATE logindetails SET password = '{}' WHERE mobileno = '{}'".format(varNewPass,self.mobile_field.text()))
-        conn.commit()
-        msg = QMessageBox()
-        msg.setIcon(QMessageBox.Information)
-        msg.setText("Password Is Updated Successfully")
-        msg.setWindowTitle("Success")
-        msg.exec_()
-        cur.close()
-        conn.close()
+            cur = conn.cursor()
+            varNewPass = self.newpassword_field.text()
+            cur.execute("UPDATE logindetails SET password = '{}' WHERE mobileno = '{}'".format(varNewPass,self.mobile_field.text()))
+            conn.commit()
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setText("Password Is Updated Successfully")
+            msg.setWindowTitle("Success")
+            msg.exec_()
+
+        except Exception as e:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setText(f"Error Ocured Due To {str(e)}")
+            msg.setWindowTitle("Error")
+            msg.exec_()
+
+        finally:
+            cur.close()
+            conn.close()
 
     def retranslateUi(self, ForgotPass):
         _translate = QtCore.QCoreApplication.translate
